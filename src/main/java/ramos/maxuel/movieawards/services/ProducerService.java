@@ -18,7 +18,7 @@ public class ProducerService {
     private final ProducerRepository producerRepository;
 
     public List<Producer> saveAll(Set<String> producersStr) {
-        List<Producer> producers = producersStr.stream().map(Producer::new).collect(Collectors.toList());
+        Set<Producer> producers = producersStr.stream().map(Producer::new).collect(Collectors.toSet());
         return producerRepository.saveAll(producers);
     }
 }

@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -24,7 +23,7 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class MovieService {
 
-    private static final Splitter PRODUCER_SPLITTER = Splitter.onPattern(",| and ");
+    private static final Splitter PRODUCER_SPLITTER = Splitter.onPattern(", | and ");
 
     @Autowired
     private CSVToMovieParser csvToMovieParser;
@@ -40,8 +39,8 @@ public class MovieService {
         try {
             List<Movie> movies = csvToMovieParser.parse(file.getInputStream());
 
-            CompletableFuture.supplyAsync(() -> extractAndSaveProducers(movies))
-                    .thenAccept(producers -> saveMovies(movies, producers));
+            Map<String, Producer> producersByName = extractAndSaveProducers(movies);
+            saveMovies(movies, producersByName);
 
         } catch (IOException e) {
             throw new RuntimeException("fail to store csv data: " + e.getMessage());
@@ -61,8 +60,9 @@ public class MovieService {
 
     private Stream<String> splitProducersNames(Movie movie) {
         return PRODUCER_SPLITTER
-                .splitToList(movie.getProducersStr())
-                .stream();
+                .splitToList(movie.getProducersStr().trim())
+                .stream()
+                .filter(t -> t.trim().length() > 0);
     }
 
     private void saveMovies(List<Movie> movies, Map<String, Producer> producers) {

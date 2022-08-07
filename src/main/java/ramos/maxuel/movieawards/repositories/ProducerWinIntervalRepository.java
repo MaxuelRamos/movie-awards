@@ -14,7 +14,7 @@ public interface ProducerWinIntervalRepository extends JpaRepository<ProducerWin
     @Query("Select p from ProducerWinInterval p where rankNumber = 1")
     List<ProducerWinInterval> findMaxWinInterval();
 
-    @Query("Select p from ProducerWinInterval p where rankNumber = (select min(p2.rankNumber) from ProducerWinInterval p2)")
+    @Query("Select p from ProducerWinInterval p where rankNumber = (select max(p2.rankNumber) from ProducerWinInterval p2)")
     List<ProducerWinInterval> findMinWinInterval();
 
 }
