@@ -21,6 +21,9 @@
 		<commons-csv.version>1.8</commons-csv.version>
 		<commons-lang3.version>3.12.0</commons-lang3.version>
 		<guava.version>31.0.1-jre</guava.version>
+		<spock-core.version>1.2-groovy-2.4</spock-core.version>
+		<spring-boot-starter-test.version>2.5.0</spring-boot-starter-test.version>
+		<gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -67,6 +70,27 @@
 			<artifactId>guava</artifactId>
 			<version>${guava.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-core</artifactId>
+			<version>${spock-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.spockframework</groupId>
+			<artifactId>spock-spring</artifactId>
+			<version>${spock-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<version>${spring-boot-starter-test.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -96,6 +120,19 @@
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.gmavenplus</groupId>
+				<artifactId>gmavenplus-plugin</artifactId>
+				<version>${gmavenplus-plugin.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compileTests</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 
