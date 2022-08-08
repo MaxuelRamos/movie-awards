@@ -2,10 +2,7 @@ package ramos.maxuel.movieawards.domain;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,6 +11,7 @@ import javax.persistence.Table;
 @Entity
 @Builder
 @Table(name = "Producer_win_interval")
+@IdClass(ProducerWinIntervalCompositeKey.class)
 public class ProducerWinInterval {
 
     @Id
@@ -23,6 +21,7 @@ public class ProducerWinInterval {
     @Column(name = "win_interval")
     private int interval;
 
+    @Id
     @Column
     private int previousWin;
 

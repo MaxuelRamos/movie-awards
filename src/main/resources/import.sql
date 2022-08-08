@@ -1,24 +1,29 @@
----- In a real project I would prefer to do this using liquibase
---
---INSERT INTO movie("year", title, studios, producers, winner) SELECT year1, title, studios, producers, winner FROM CSVRead('classpath:movielist.csv', null, 'charset=UTF-8 fieldSeparator=;') ;
-----
----- (cast(cast(("year") as varchar(4)) as integer))
-
 drop table if exists producer_win_interval CASCADE;
 
-create view producer_win_interval as
+create view producer_win_interval as -- in a real database, this would be a materialized view
 SELECT p.name AS producer,
-    max(m."year") - min(m."year") AS win_interval,
-    min(m."year") AS previous_win,
-    max(m."year") AS following_win,
-    RANK () OVER (ORDER BY max(m."year") - min(m."year") DESC) rank_number
-FROM producer p
-JOIN producer_has_movie phm ON phm.producer_id = p.id
-JOIN movie m ON m.id = phm.movie_id
-where m.winner = true
-GROUP BY p.name
-having count(phm.movie_id) > 1
-ORDER BY rank_number ASC;
+       (p_wins.next_win_year - p_wins.win_year) AS win_interval,
+       p_wins.win_year AS previous_win,
+       p_wins.next_win_year AS FOLLOWING_WIN,
+       RANK () OVER (
+                     ORDER BY p_wins.next_win_year - p_wins.win_year DESC) rank_number
+FROM
+  (SELECT p. id AS producer_id,
+          m1."year" AS win_year,
 
-
-
+     (SELECT m2."year"
+      FROM movie m2
+      JOIN producer_has_movie pm2 ON pm2.movie_id = m2.id
+      AND pm2.producer_id = p.id
+      WHERE m2.winner = TRUE
+        AND m2.id > m1.id
+      ORDER BY m2."year" ASC
+      LIMIT 1) AS next_win_year
+   FROM movie m1
+   JOIN producer_has_movie pm ON pm.movie_id = m1.id
+   JOIN producer p ON pm.producer_id = p.id
+   WHERE m1.winner = TRUE
+   ORDER BY m1."year") AS p_wins
+JOIN producer p ON p.id = p_wins.producer_id
+WHERE p_wins.next_win_year IS NOT NULL
+ORDER BY rank_number;
