@@ -5,7 +5,7 @@ server:
 
 application:
   features:
-    auto-import: false
+    auto-import: true
 
 spring:
   datasource:
