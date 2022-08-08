@@ -3,6 +3,9 @@ package ramos.maxuel.movieawards.domain;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 @NoArgsConstructor
@@ -10,6 +13,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @Entity
+@Builder
 @Table(name = "Movie")
 public class Movie {
 
@@ -19,7 +23,7 @@ public class Movie {
     private Long id;
 
     @Column(name = "[year]")
-    private String year;
+    private Integer year;
 
     @Column
     private String title;
@@ -28,8 +32,15 @@ public class Movie {
     private String studios;
 
     @Column
-    private String producers;
+    private String producersStr;
 
     @Column
-    private String winner;
+    private Boolean winner;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "producer_has_movie",
+            joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "producer_id"))
+    private Set<Producer> producers;
 }
