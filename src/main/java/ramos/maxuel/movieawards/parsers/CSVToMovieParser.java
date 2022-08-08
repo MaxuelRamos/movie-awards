@@ -39,14 +39,14 @@ public class CSVToMovieParser {
 
     private Movie parseCSVToMovie(CSVRecord csvRecord) {
         String yearStr = csvRecord.get("year");
-        String winnerStr = csvRecord.get("winner");
+        boolean winner = "yes".equals(csvRecord.get("winner"));
 
         return Movie.builder()
                 .year(Integer.valueOf(yearStr))
                 .title(csvRecord.get("title"))
                 .studios(csvRecord.get("studios"))
                 .producersStr(csvRecord.get("producers"))
-                .winner(Boolean.parseBoolean(winnerStr))
+                .winner(winner)
                 .producers(new HashSet<>())
                 .build();
     }

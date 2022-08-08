@@ -12,6 +12,7 @@ import ramos.maxuel.movieawards.parsers.CSVToMovieParser;
 import ramos.maxuel.movieawards.repositories.MovieRepository;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,25 +27,30 @@ public class MovieService {
     private static final Splitter PRODUCER_SPLITTER = Splitter.onPattern(", | and ");
 
     @Autowired
-    private CSVToMovieParser csvToMovieParser;
+    private final CSVToMovieParser csvToMovieParser;
 
     @Autowired
-    private ProducerService producerService;
+    private final ProducerService producerService;
 
     @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
 
     @Transactional
     public void createFromFile(MultipartFile file) {
         try {
-            List<Movie> movies = csvToMovieParser.parse(file.getInputStream());
-
-            Map<String, Producer> producersByName = extractAndSaveProducers(movies);
-            saveMovies(movies, producersByName);
-
+            InputStream inputStream = file.getInputStream();
+            createFromBytes(inputStream);
         } catch (IOException e) {
             throw new RuntimeException("fail to store csv data: " + e.getMessage());
         }
+    }
+
+    @Transactional
+    public void createFromBytes(InputStream inputStream) {
+        List<Movie> movies = csvToMovieParser.parse(inputStream);
+
+        Map<String, Producer> producersByName = extractAndSaveProducers(movies);
+        saveMovies(movies, producersByName);
     }
 
     private Map<String, Producer> extractAndSaveProducers(List<Movie> movies) {

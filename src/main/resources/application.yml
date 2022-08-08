@@ -1,3 +1,12 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /movie-awards
+
+application:
+  features:
+    auto-import: false
+
 spring:
   datasource:
     url: jdbc:h2:mem:mydb

@@ -1,0 +1,82 @@
+{
+	"info": {
+		"_postman_id": "7c6828b5-7449-4c62-ab71-4d207ceef7c3",
+		"name": "Movie Awards",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "producers",
+			"item": [
+				{
+					"name": "Min and max",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/movie-awards/api/producers-win-interval/min-and-max",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movie-awards",
+								"api",
+								"producers-win-interval",
+								"min-and-max"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Movies",
+			"item": [
+				{
+					"name": "Upload movies",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-disposition",
+								"value": "attachment; filename=file.csv",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/csv",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/lubioramos/Documents/ws/exercises/movie-awards/src/main/resources/movielist.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "localhost:8080/movie-awards/api/movies",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"movie-awards",
+								"api",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
